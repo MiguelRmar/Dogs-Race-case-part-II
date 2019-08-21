@@ -62,7 +62,14 @@ public class MainCanodromo {
                 new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        System.out.println("Carrera pausada!");
+                        synchronized(lock){
+                            try {
+                                lock.wait();
+                            } catch (InterruptedException ex) {
+                                Logger.getLogger(MainCanodromo.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            System.out.println("Carrera pausada!");
+                        }
                     }
                 }
         );
@@ -71,7 +78,10 @@ public class MainCanodromo {
                 new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        System.out.println("Carrera reanudada!");
+                        synchronized(lock){
+                            lock.notifyAll();
+                            System.out.println("Carrera reanudada!");
+                        }
                     }
                 }
         );
